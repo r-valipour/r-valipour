@@ -166,10 +166,10 @@ social:
 
   # ---- Mastodon / Bluesky (public RSS) ----
   fediverse:
-    - name: Mastodon - #Iran
+    - name: "Mastodon - #Iran"
       url: https://infosec.exchange/tags/iran.rss
       lang: en
-    - name: Mastodon - #IranCyber
+    - name: "Mastodon - #IranCyber"
       url: https://infosec.exchange/tags/irancyber.rss
       lang: en
 

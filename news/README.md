@@ -16,7 +16,21 @@ At **06:00 and 18:00 UTC** (~09:30 and 21:30 Tehran), GitHub runs a script that:
 
 You just open `index.md` and click a date.
 
-## The only file you edit: `sources.yml`
+## Two ways to add a source
+
+**The Source Desk page** — https://claude.ai/code/artifact/26e7cfaf-e3fe-468f-b9d2-40a6db556eab
+
+Add, pause and remove sources with a form, then press **Save changes**. Because
+published pages are sandboxed and can't write to GitHub, it hands you the
+finished file and a button that opens `sources.yml` on GitHub ready to paste
+into. Copy, paste, commit — done, no YAML to hand-edit.
+
+The page keeps your work-in-progress in your own browser, so you can add a few
+sources over the week and save them all at once.
+
+**Or edit `sources.yml` directly** — the format is below.
+
+## The file itself: `sources.yml`
 
 It's plain text, organised into labelled blocks:
 

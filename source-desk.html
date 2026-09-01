@@ -1,0 +1,570 @@
+<title>RaazNet Source Desk</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#e9ece8; --surface:#f8f9f6; --raised:#ffffff;
+  --ink:#16292a; --muted:#5e716f; --faint:#8a9a98;
+  --line:#cdd6d2; --line-soft:#dfe5e1;
+  --accent:#0c7f83; --accent-soft:#d5e9e8; --accent-ink:#075c5f;
+  --warn:#96610f; --warn-soft:#f0e4cc;
+  --danger:#9c3d29; --danger-soft:#f2ded8;
+  --shadow:0 1px 2px rgba(20,45,45,.07), 0 6px 18px rgba(20,45,45,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0e1a1b; --surface:#152525; --raised:#1c2f2f;
+  --ink:#dde7e4; --muted:#93a7a4; --faint:#6d817f;
+  --line:#2b4242; --line-soft:#223636;
+  --accent:#45c2c0; --accent-soft:#123f3e; --accent-ink:#8adedc;
+  --warn:#d9a24a; --warn-soft:#3a2f17;
+  --danger:#e08268; --danger-soft:#3f2119;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+}}
+:root[data-theme="dark"]{
+  --ground:#0e1a1b; --surface:#152525; --raised:#1c2f2f;
+  --ink:#dde7e4; --muted:#93a7a4; --faint:#6d817f;
+  --line:#2b4242; --line-soft:#223636;
+  --accent:#45c2c0; --accent-soft:#123f3e; --accent-ink:#8adedc;
+  --warn:#d9a24a; --warn-soft:#3a2f17;
+  --danger:#e08268; --danger-soft:#3f2119;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:"Source Sans 3","Vazirmatn",system-ui,sans-serif;font-size:15px;line-height:1.55}
+h1,h2,h3{font-family:"Vazirmatn","Source Sans 3",system-ui,sans-serif;font-weight:700;text-wrap:balance;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,monospace}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- shell ---------- */
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px 140px}
+header.top{border-bottom:1px solid var(--line);background:var(--surface)}
+.top-in{max-width:1100px;margin:0 auto;padding:22px 20px 18px;
+  display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between}
+.brand{display:flex;flex-direction:column;gap:3px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:600}
+h1{font-size:27px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px;max-width:62ch}
+.counts{display:flex;gap:22px;padding-bottom:2px}
+.count b{display:block;font-size:24px;font-variant-numeric:tabular-nums;line-height:1.1}
+.count span{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+
+/* ---------- notice ---------- */
+.notice{display:flex;gap:12px;margin:22px 0 26px;padding:14px 16px;border-radius:8px;
+  background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent)}
+.notice .n-ic{font-size:17px;line-height:1.3}
+.notice p{margin:0;font-size:14px;color:var(--ink)}
+.notice p+p{margin-top:6px}
+.notice b{font-weight:600}
+
+/* ---------- layout ---------- */
+.cols{display:grid;grid-template-columns:216px 1fr;gap:26px;align-items:start}
+@media (max-width:760px){.cols{grid-template-columns:1fr;gap:16px}}
+nav.rail{display:flex;flex-direction:column;gap:2px;position:sticky;top:16px}
+@media (max-width:760px){nav.rail{position:static;flex-direction:row;flex-wrap:wrap}}
+.rail button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;cursor:pointer;
+  padding:9px 11px;border:1px solid transparent;border-radius:7px;background:none;color:var(--muted);
+  font:inherit;font-size:14px;transition:background .12s,color .12s}
+@media (max-width:760px){.rail button{width:auto}}
+.rail button:hover{background:var(--surface);color:var(--ink)}
+.rail button[aria-current="true"]{background:var(--accent-soft);color:var(--accent-ink);
+  border-color:color-mix(in srgb,var(--accent) 34%,transparent);font-weight:600}
+.rail .tally{margin-left:auto;font-size:12px;font-variant-numeric:tabular-nums;
+  font-family:"JetBrains Mono",monospace;opacity:.8}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.panel-head{padding:16px 18px 14px;border-bottom:1px solid var(--line-soft)}
+.panel-head h2{font-size:17px}
+.panel-head p{margin:5px 0 0;color:var(--muted);font-size:13.5px;max-width:64ch}
+
+/* ---------- rows ---------- */
+ul.rows{list-style:none;margin:0;padding:0}
+.row{display:flex;align-items:flex-start;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line-soft)}
+.row:last-child{border-bottom:0}
+.row.off .r-name,.row.off .r-url{opacity:.42;text-decoration:line-through}
+.r-body{flex:1;min-width:0}
+.r-name{font-weight:600;font-size:14.5px;word-break:break-word}
+.r-name:dir(rtl){font-family:"Vazirmatn",sans-serif}
+.r-url{font-size:12px;color:var(--faint);word-break:break-all;margin-top:2px}
+.r-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+  padding:2px 7px;border-radius:999px;background:var(--raised);border:1px solid var(--line);color:var(--muted)}
+.tag.on{background:var(--accent-soft);border-color:transparent;color:var(--accent-ink)}
+.tag.warnt{background:var(--warn-soft);border-color:transparent;color:var(--warn)}
+.tag.newt{background:var(--accent);border-color:transparent;color:var(--surface)}
+.r-acts{display:flex;gap:6px;flex-shrink:0}
+.icon{cursor:pointer;border:1px solid var(--line);background:var(--raised);color:var(--muted);
+  border-radius:6px;width:30px;height:30px;display:grid;place-items:center;font-size:14px;
+  font-family:inherit;transition:background .12s,color .12s,border-color .12s}
+.icon:hover{color:var(--ink);border-color:var(--muted)}
+.icon.del:hover{background:var(--danger-soft);color:var(--danger);border-color:var(--danger)}
+.empty{padding:26px 18px;color:var(--faint);font-size:14px;text-align:center}
+
+/* ---------- add form ---------- */
+.adder{padding:15px 18px 17px;background:var(--raised);border-top:1px solid var(--line)}
+.adder h3{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:11px}
+.fields{display:flex;flex-wrap:wrap;gap:9px;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:4px;flex:1 1 190px;min-width:0}
+.field.grow{flex:2 1 290px}
+.field label{font-size:11.5px;color:var(--muted);font-weight:600}
+input[type=text],select{font:inherit;font-size:14px;padding:8px 10px;border-radius:6px;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input[type=text]::placeholder{color:var(--faint)}
+input.mono{font-family:"JetBrains Mono",monospace;font-size:12.5px}
+.btn{cursor:pointer;font:inherit;font-weight:600;font-size:14px;padding:8px 16px;border-radius:6px;
+  border:1px solid transparent;background:var(--accent);color:#fff;transition:filter .12s}
+:root[data-theme="dark"] .btn,
+:root:not([data-theme="light"]) .btn{color:#08201f}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .btn{color:#fff}}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--muted);filter:none}
+.err{color:var(--danger);font-size:13px;margin:9px 0 0;min-height:1px}
+.hint{color:var(--faint);font-size:12.5px;margin:10px 0 0}
+
+/* ---------- output bar ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);
+  border-top:1px solid var(--line);box-shadow:var(--shadow);z-index:20}
+.bar-in{max-width:1100px;margin:0 auto;padding:12px 20px;display:flex;gap:14px;
+  align-items:center;justify-content:space-between;flex-wrap:wrap}
+.changes{font-size:13.5px;color:var(--muted)}
+.changes b{color:var(--ink)}
+.bar-acts{display:flex;gap:9px;flex-wrap:wrap}
+
+/* ---------- yaml sheet ---------- */
+.sheet{position:fixed;inset:0;background:rgba(10,25,25,.55);z-index:30;
+  display:grid;place-items:center;padding:20px}
+.sheet-in{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  width:min(760px,100%);max-height:86vh;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.sheet-head{padding:17px 20px 14px;border-bottom:1px solid var(--line-soft)}
+.sheet-head h2{font-size:18px}
+.sheet-head p{margin:6px 0 0;color:var(--muted);font-size:13.5px}
+.steps{margin:12px 0 0;padding-left:19px;color:var(--muted);font-size:13.5px}
+.steps li{margin:4px 0}
+.steps b{color:var(--ink)}
+pre.yaml{margin:0;flex:1;overflow:auto;padding:15px 20px;font-family:"JetBrains Mono",monospace;
+  font-size:11.5px;line-height:1.6;background:var(--ground);color:var(--ink);white-space:pre}
+.sheet-foot{padding:13px 20px;border-top:1px solid var(--line);display:flex;gap:9px;
+  justify-content:flex-end;flex-wrap:wrap}
+a.btn{text-decoration:none;display:inline-block}
+footer.foot{color:var(--faint);font-size:12.5px;text-align:center;padding:26px 20px 0}
+</style>
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <span class="eyebrow">RaazNet · رازنت</span>
+      <h1>Source Desk</h1>
+      <p class="sub">Add, pause and remove the sources your Iran cybersecurity calendar watches twice a day.</p>
+    </div>
+    <div class="counts">
+      <div class="count"><b id="c-active">0</b><span>Watching</span></div>
+      <div class="count"><b id="c-paused">0</b><span>Paused</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="notice">
+    <span class="n-ic" aria-hidden="true">📋</span>
+    <div>
+      <p><b>This page can't reach your repository</b> — published pages are sandboxed and can't write to GitHub.</p>
+      <p>So make your changes here, then press <b>Save changes</b>. You'll get the finished file to copy, and a button that opens the right GitHub page to paste it into. Two clicks and a paste.</p>
+    </div>
+  </div>
+
+  <div class="cols">
+    <nav class="rail" id="rail" aria-label="Source groups"></nav>
+    <main>
+      <section class="panel">
+        <div class="panel-head">
+          <h2 id="p-title">—</h2>
+          <p id="p-desc">—</p>
+        </div>
+        <ul class="rows" id="rows"></ul>
+        <div class="adder">
+          <h3 id="a-title">Add</h3>
+          <form class="fields" id="addform" autocomplete="off"></form>
+          <p class="err" id="err" role="alert"></p>
+          <p class="hint" id="hint"></p>
+        </div>
+      </section>
+      <footer class="foot">
+        Changes are kept in this browser until you save them into <span class="mono">sources.yml</span>.
+      </footer>
+    </main>
+  </div>
+</div>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="changes" id="changes">No changes yet.</div>
+    <div class="bar-acts">
+      <button class="btn ghost" id="reset" type="button">Discard changes</button>
+      <button class="btn" id="save" type="button">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-in" role="dialog" aria-modal="true" aria-labelledby="sheet-h">
+    <div class="sheet-head">
+      <h2 id="sheet-h">Your updated sources.yml</h2>
+      <p id="sheet-sum">—</p>
+      <ol class="steps">
+        <li>Press <b>Copy file</b>.</li>
+        <li>Press <b>Open on GitHub</b> — it opens <span class="mono">sources.yml</span> ready to edit.</li>
+        <li>Select everything there (Ctrl+A / ⌘A), paste, then click <b>Commit changes</b>.</li>
+      </ol>
+    </div>
+    <pre class="yaml mono" id="yaml">—</pre>
+    <div class="sheet-foot">
+      <button class="btn ghost" id="close" type="button">Back</button>
+      <a class="btn ghost" id="gh" target="_blank" rel="noopener"
+         href="https://github.com/r-valipour/r-valipour/edit/main/sources.yml">Open on GitHub ↗</a>
+      <button class="btn" id="copy" type="button">Copy file</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = {"settings": {"lookback_days": 3, "require_both_topics": true}, "main_feeds": [{"name": "The Hacker News", "url": "https://feeds.feedburner.com/TheHackersNews", "lang": "en", "filter": true}, {"name": "CISA Cybersecurity Advisories", "url": "https://www.cisa.gov/cybersecurity-advisories/all.xml", "lang": "en", "filter": true}, {"name": "CyberScoop", "url": "https://cyberscoop.com/feed/", "lang": "en", "filter": true}, {"name": "SecurityWeek", "url": "https://www.securityweek.com/feed/", "lang": "en", "filter": true}, {"name": "Reuters Technology", "url": "https://www.reuters.com/arc/outboundfeeds/rss/?outputType=xml", "lang": "en", "filter": true}], "security_feeds": [{"name": "BleepingComputer", "url": "https://www.bleepingcomputer.com/feed/", "lang": "en"}, {"name": "The Record", "url": "https://therecord.media/feed", "lang": "en"}, {"name": "Krebs on Security", "url": "https://krebsonsecurity.com/feed/", "lang": "en"}, {"name": "Google Threat Intelligence", "url": "https://cloud.google.com/blog/topics/threat-intelligence/rss/", "lang": "en"}, {"name": "Microsoft Threat Intelligence", "url": "https://www.microsoft.com/en-us/security/blog/topic/threat-intelligence/feed/", "lang": "en"}, {"name": "Recorded Future", "url": "https://www.recordedfuture.com/feed", "lang": "en"}, {"name": "ESET WeLiveSecurity", "url": "https://feeds.feedburner.com/eset/blog", "lang": "en"}], "persian_feeds": [{"name": "زومیت", "url": "https://www.zoomit.ir/feed/", "lang": "fa"}, {"name": "ایسنا - علم و فناوری", "url": "https://www.isna.ir/rss/tp/41", "lang": "fa"}, {"name": "مهر - فناوری", "url": "https://www.mehrnews.com/rss/tp/22", "lang": "fa"}, {"name": "BBC فارسی", "url": "https://feeds.bbci.co.uk/persian/rss.xml", "lang": "fa"}, {"name": "رادیو فردا", "url": "https://www.radiofarda.com/api/zrqiteuuir", "lang": "fa"}, {"name": "ایران اینترنشنال", "url": "https://www.iranintl.com/fa/feed", "lang": "fa"}], "search_queries": {"en": ["Iran cyberattack", "Iranian hackers", "Iran APT threat actor", "Iran critical infrastructure hack", "Iran internet censorship filtering", "Iranian state-sponsored hacking", "Iran data breach leak", "Iran surveillance spyware", "Charming Kitten OR \"APT35\" OR \"MuddyWater\" OR \"OilRig\"", "Predatory Sparrow Iran", "site:reuters.com Iran cyber"], "fa": ["حمله سایبری ایران", "هکرهای ایرانی", "نشت اطلاعات ایران", "امنیت سایبری ایران", "فیلترینگ اینترنت ایران", "باج‌افزار ایران", "جاسوس‌افزار ایران", "زیرساخت حیاتی سایبری"]}, "social": {"telegram": ["filterwatch", "net4iran"], "nitter_instances": ["https://nitter.net", "https://nitter.poast.org"], "twitter": ["amitaii", "CyberAmir", "1ZRR4H", "campuscodi"], "reddit": ["cybersecurity", "netsec", "blueteamsec"], "fediverse": [{"name": "Mastodon - #Iran", "url": "https://infosec.exchange/tags/iran.rss", "lang": "en"}, {"name": "Mastodon - #IranCyber", "url": "https://infosec.exchange/tags/irancyber.rss", "lang": "en"}]}};
+const KEYWORDS_BLOCK = "\n# ═══════════════════════════════════════════════════════════════════\n#  BLOCK 6 — KEYWORDS (how \"is this relevant?\" is decided)\n# ═══════════════════════════════════════════════════════════════════\nkeywords:\n  iran:\n    - iran\n    - iranian\n    - tehran\n    - irgc\n    - \"islamic republic\"\n    - persian gulf\n    - charming kitten\n    - apt33\n    - apt34\n    - apt35\n    - apt39\n    - apt42\n    - muddywater\n    - oilrig\n    - cobalt mirage\n    - homeland justice\n    - predatory sparrow\n    - gonjeshke darande\n    - ایران\n    - ایرانی\n    - تهران\n    - سپاه\n  cyber:\n    - cyber\n    - hack\n    - hacker\n    - hacking\n    - breach\n    - malware\n    - ransomware\n    - phishing\n    - spyware\n    - apt\n    - threat actor\n    - vulnerability\n    - exploit\n    - zero-day\n    - ddos\n    - data leak\n    - infostealer\n    - surveillance\n    - censorship\n    - internet shutdown\n    - سایبری\n    - هکر\n    - هک\n    - بدافزار\n    - باج‌افزار\n    - فیشینگ\n    - جاسوس‌افزار\n    - نشت اطلاعات\n    - آسیب‌پذیری\n    - رخنه\n    - فیلترینگ\n    - اینترنت\n";
+const REPO = "r-valipour/r-valipour";
+const STORE = "raaznet.sources.v1";
+
+/* ---------- group definitions ---------- */
+const GROUPS = [
+  { id:"main_feeds", icon:"\u2605", label:"Main sources",
+    title:"Main sources", kind:"feed", hasFilter:true,
+    desc:"Your hand-picked outlets. These appear first in every digest, in their own section.",
+    hint:"Leave \u201cIran items only\u201d on for a general outlet. Turn it off only for a source that is already all about Iran \u2014 otherwise its whole output floods the digest." },
+  { id:"security_feeds", icon:"\u26e8", label:"Security press",
+    title:"Security press", kind:"feed",
+    desc:"General security outlets. Only their Iran-related items are kept.",
+    hint:"Most sites publish a feed at /feed or /rss. If a site has none, add a web search instead." },
+  { id:"persian_feeds", icon:"\u06f1", label:"Persian press",
+    title:"Persian press \u2014 \u0631\u0633\u0627\u0646\u0647\u200c\u0647\u0627\u06cc \u0641\u0627\u0631\u0633\u06cc", kind:"feed",
+    desc:"Persian-language outlets, filtered the same way.",
+    hint:"Persian names are fine here \u2014 the digest labels each item by the language it detects." },
+  { id:"searches", icon:"\u2315", label:"Web searches",
+    title:"Web searches", kind:"search",
+    desc:"Run fresh against Google News every time. This is the widest net \u2014 how the calendar finds things outside your listed sources.",
+    hint:"Write it like you would type it into a search box. site:example.com Iran cyber works too, and is the way to cover a site with no feed." },
+  { id:"telegram", icon:"\u2708", label:"Telegram",
+    title:"Telegram channels", kind:"handle", prefix:"t.me/",
+    desc:"Public channels, read through their web preview. The most dependable social source.",
+    hint:"Just the channel name from its link \u2014 for t.me/filterwatch, type filterwatch." },
+  { id:"twitter", icon:"\u2715", label:"X / Twitter",
+    title:"X / Twitter accounts", kind:"handle", prefix:"@",
+    desc:"Read through public Nitter mirrors, which break often. When they are down this section is simply empty.",
+    hint:"The handle without the @ \u2014 for @campuscodi, type campuscodi." },
+  { id:"reddit", icon:"\u25c9", label:"Reddit",
+    title:"Reddit communities", kind:"handle", prefix:"r/",
+    desc:"Public subreddit feeds, filtered for Iran mentions.",
+    hint:"The name without r/ \u2014 for r/netsec, type netsec." },
+  { id:"fediverse", icon:"\u25c8", label:"Mastodon",
+    title:"Mastodon feeds", kind:"feed",
+    desc:"Public hashtag or account feeds from any Mastodon server.",
+    hint:"A hashtag feed looks like https://infosec.exchange/tags/iran.rss" }
+];
+
+/* ---------- state ---------- */
+let state = null, current = "main_feeds";
+
+function seed(){
+  const s = { main_feeds:[], security_feeds:[], persian_feeds:[], searches:[],
+              telegram:[], twitter:[], reddit:[], fediverse:[] };
+  for (const g of ["main_feeds","security_feeds","persian_feeds"])
+    s[g] = DATA[g].map(f => ({...f, off:false, added:false}));
+  for (const lang of ["en","fa"])
+    for (const q of (DATA.search_queries[lang]||[]))
+      s.searches.push({ query:q, lang, off:false, added:false });
+  for (const g of ["telegram","twitter","reddit"])
+    s[g] = (DATA.social[g]||[]).map(h => ({ handle:h, off:false, added:false }));
+  s.fediverse = (DATA.social.fediverse||[]).map(f => ({...f, off:false, added:false}));
+  return s;
+}
+function load(){
+  try {
+    const raw = localStorage.getItem(STORE);
+    if (raw) { const p = JSON.parse(raw); if (p && p.main_feeds) return p; }
+  } catch (e) {}
+  return seed();
+}
+function save(){ try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} }
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const group = id => GROUPS.find(g => g.id === id);
+const isFa = s => /[\u0600-\u06ff]/.test(s || "");
+const label = it => it.query ?? it.name ?? it.handle ?? "";
+
+/* ---------- rendering ---------- */
+function renderRail(){
+  $("rail").innerHTML = GROUPS.map(g => {
+    const live = state[g.id].filter(i => !i.off).length;
+    return `<button type="button" data-g="${g.id}" aria-current="${g.id===current}">
+      <span aria-hidden="true">${g.icon}</span><span>${esc(g.label)}</span>
+      <span class="tally">${live}</span></button>`;
+  }).join("");
+  $("rail").querySelectorAll("button").forEach(b =>
+    b.onclick = () => { current = b.dataset.g; render(); });
+}
+
+function renderRows(){
+  const g = group(current), items = state[current];
+  $("p-title").textContent = g.title;
+  $("p-desc").textContent  = g.desc;
+  $("hint").textContent    = g.hint;
+  $("a-title").textContent = "Add to " + g.label.toLowerCase();
+
+  if (!items.length){
+    $("rows").innerHTML = `<li class="empty">Nothing here yet \u2014 add the first one below.</li>`;
+    return;
+  }
+  $("rows").innerHTML = items.map((it, i) => {
+    const name = label(it);
+    const tags = [];
+    if (g.kind === "feed"){
+      tags.push(`<span class="tag">${it.lang === "fa" ? "\u0641\u0627\u0631\u0633\u06cc" : "English"}</span>`);
+      if (g.hasFilter) tags.push(it.filter === false
+        ? `<span class="tag warnt">everything kept</span>`
+        : `<span class="tag on">Iran items only</span>`);
+    }
+    if (g.kind === "search")
+      tags.push(`<span class="tag">${it.lang === "fa" ? "\u0641\u0627\u0631\u0633\u06cc" : "English"}</span>`);
+    if (it.added) tags.push(`<span class="tag newt">added</span>`);
+    if (it.off)   tags.push(`<span class="tag">paused</span>`);
+
+    const sub = g.kind === "feed" ? it.url
+              : g.kind === "handle" ? (g.prefix + it.handle) : "";
+    return `<li class="row${it.off ? " off" : ""}">
+      <div class="r-body">
+        <div class="r-name"${isFa(name) ? ' dir="rtl"' : ""}>${esc(name)}</div>
+        ${sub ? `<div class="r-url mono">${esc(sub)}</div>` : ""}
+        <div class="r-tags">${tags.join("")}</div>
+      </div>
+      <div class="r-acts">
+        <button class="icon" data-act="toggle" data-i="${i}"
+          title="${it.off ? "Resume" : "Pause"}" aria-label="${it.off ? "Resume" : "Pause"} ${esc(name)}"
+          >${it.off ? "\u21ba" : "\u23f8"}</button>
+        <button class="icon del" data-act="del" data-i="${i}"
+          title="Remove" aria-label="Remove ${esc(name)}">\u2715</button>
+      </div></li>`;
+  }).join("");
+
+  $("rows").querySelectorAll("button").forEach(b => b.onclick = () => {
+    const i = +b.dataset.i;
+    if (b.dataset.act === "toggle") state[current][i].off = !state[current][i].off;
+    else state[current].splice(i, 1);
+    save(); render();
+  });
+}
+
+function renderForm(){
+  const g = group(current);
+  let html = "";
+  if (g.kind === "feed"){
+    html = `<div class="field grow"><label for="f-name">Name</label>
+        <input type="text" id="f-name" placeholder="What you want to call it"></div>
+      <div class="field grow"><label for="f-url">Feed address</label>
+        <input type="text" id="f-url" class="mono" placeholder="https://example.com/feed/"></div>
+      <div class="field" style="flex:0 1 120px"><label for="f-lang">Language</label>
+        <select id="f-lang"><option value="en">English</option><option value="fa">\u0641\u0627\u0631\u0633\u06cc</option></select></div>`
+      + (g.hasFilter ? `<div class="field" style="flex:0 1 160px"><label for="f-filter">Keep</label>
+        <select id="f-filter"><option value="true">Iran items only</option>
+        <option value="false">Everything it posts</option></select></div>` : "");
+  } else if (g.kind === "search"){
+    html = `<div class="field grow"><label for="f-query">Search</label>
+        <input type="text" id="f-query" placeholder="Iran cyberattack"></div>
+      <div class="field" style="flex:0 1 120px"><label for="f-lang">Language</label>
+        <select id="f-lang"><option value="en">English</option><option value="fa">\u0641\u0627\u0631\u0633\u06cc</option></select></div>`;
+  } else {
+    html = `<div class="field grow"><label for="f-handle">${esc(g.prefix)}\u2026</label>
+        <input type="text" id="f-handle" class="mono" placeholder="name"></div>`;
+  }
+  $("addform").innerHTML = html + `<button class="btn" type="submit">Add</button>`;
+  $("addform").onsubmit = onAdd;
+}
+
+function render(){ renderRail(); renderRows(); renderForm(); $("err").textContent = ""; renderStatus(); }
+
+/* ---------- adding ---------- */
+function onAdd(ev){
+  ev.preventDefault();
+  const g = group(current), err = $("err");
+  err.textContent = "";
+  const dupe = v => state[current].some(i =>
+    label(i).toLowerCase() === v.toLowerCase() ||
+    (i.url && i.url.toLowerCase() === v.toLowerCase()));
+
+  if (g.kind === "feed"){
+    const name = $("f-name").value.trim(), url = $("f-url").value.trim();
+    if (!name) return err.textContent = "Give it a name so you can recognise it later.";
+    if (!/^https?:\/\/\S+$/i.test(url))
+      return err.textContent = "The feed address needs to start with http:// or https://";
+    if (dupe(url)) return err.textContent = "That feed is already on this list.";
+    const it = { name, url, lang:$("f-lang").value, off:false, added:true };
+    if (g.hasFilter) it.filter = $("f-filter").value === "true";
+    state[current].push(it);
+  } else if (g.kind === "search"){
+    const q = $("f-query").value.trim();
+    if (q.length < 3) return err.textContent = "Type a few words to search for.";
+    if (dupe(q)) return err.textContent = "You are already searching for that.";
+    state[current].push({ query:q, lang:$("f-lang").value, off:false, added:true });
+  } else {
+    let h = $("f-handle").value.trim().replace(/^@/, "")
+              .replace(/^r\//i, "").replace(/^(https?:\/\/)?(t\.me|www\.reddit\.com)\/(s\/|r\/)?/i, "")
+              .replace(/\/$/, "");
+    if (!/^[\w.-]{2,}$/.test(h))
+      return err.textContent = "Use just the name \u2014 letters, numbers and underscores.";
+    if (dupe(h)) return err.textContent = "That one is already on the list.";
+    state[current].push({ handle:h, off:false, added:true });
+  }
+  save(); render();
+  const first = $("addform").querySelector("input");
+  if (first) first.focus();
+}
+
+/* ---------- change summary ---------- */
+function tally(){
+  let added = 0, paused = 0, active = 0;
+  for (const g of GROUPS) for (const it of state[g.id]){
+    if (it.added) added++;
+    if (it.off) paused++; else active++;
+  }
+  const base = seed(), removed = GROUPS.reduce((n, g) => {
+    const have = new Set(state[g.id].map(i => label(i)));
+    return n + base[g.id].filter(i => !have.has(label(i))).length;
+  }, 0);
+  return { added, paused, active, removed };
+}
+function renderStatus(){
+  const t = tally();
+  $("c-active").textContent = t.active;
+  $("c-paused").textContent = t.paused;
+  const bits = [];
+  if (t.added)   bits.push(`<b>${t.added}</b> added`);
+  if (t.removed) bits.push(`<b>${t.removed}</b> removed`);
+  if (t.paused)  bits.push(`<b>${t.paused}</b> paused`);
+  $("changes").innerHTML = bits.length
+    ? bits.join(" \u00b7 ") + " \u2014 not saved to GitHub yet."
+    : "No changes yet.";
+}
+
+/* ---------- YAML ---------- */
+// YAML-safe scalar: quote anything that could change the file's meaning
+//  — a # starts a comment, ": " starts a mapping, and leading punctuation
+// has syntax meaning. JSON.stringify yields a valid double-quoted YAML
+// scalar, Persian text included.
+const q = s => (/^[^\s#&*!|>%@`'"\[\]{},][^#]*$/.test(s)
+  && !/:\s/.test(s) && !/\s$/.test(s)) ? s : JSON.stringify(s);
+function feedLines(it, hasFilter){
+  const L = [`  - name: ${q(it.name)}`, `    url: ${q(it.url)}`, `    lang: ${it.lang || "en"}`];
+  if (hasFilter) L.push(`    filter: ${it.filter === false ? "false" : "true"}`);
+  return it.off ? L.map(l => "# " + l) : L;
+}
+function listBlock(id, hasFilter){
+  const out = [];
+  for (const it of state[id]) out.push(...feedLines(it, hasFilter), "");
+  return out;
+}
+function buildYaml(){
+  const L = [];
+  L.push("# " + "=".repeat(67));
+  L.push("#  RaazNet \u2014 Iran cybersecurity news calendar");
+  L.push("#  Edited from the Source Desk page. You can also edit it by hand.");
+  L.push("# " + "=".repeat(67), "");
+  L.push("settings:");
+  L.push(`  lookback_days: ${DATA.settings.lookback_days}`);
+  L.push(`  require_both_topics: ${DATA.settings.require_both_topics}`, "");
+
+  L.push("# --- MAIN SOURCES -------------------------------------------------");
+  L.push("#  filter: true  \u2192 only their Iran-related items are kept");
+  L.push("#  filter: false \u2192 every item is kept, unfiltered");
+  L.push("main_feeds:");
+  L.push(...listBlock("main_feeds", true));
+
+  L.push("# --- SECURITY PRESS (filtered for Iran mentions) ------------------");
+  L.push("security_feeds:");
+  L.push(...listBlock("security_feeds", false));
+
+  L.push("# --- PERSIAN PRESS / \u0631\u0633\u0627\u0646\u0647\u200c\u0647\u0627\u06cc \u0641\u0627\u0631\u0633\u06cc -------------------------------");
+  L.push("persian_feeds:");
+  L.push(...listBlock("persian_feeds", false));
+
+  L.push("# --- WEB SEARCHES -------------------------------------------------");
+  L.push("search_queries:");
+  for (const lang of ["en", "fa"]){
+    L.push(`  ${lang}:`);
+    for (const it of state.searches.filter(s => s.lang === lang))
+      L.push((it.off ? "# " : "") + `    - ${q(it.query)}`);
+    L.push("");
+  }
+
+  L.push("# " + "=".repeat(67));
+  L.push("#  SOCIAL MEDIA");
+  L.push("# " + "=".repeat(67));
+  L.push("social:", "");
+  L.push("  # Telegram \u2014 the channel name from t.me/<name>");
+  L.push("  telegram:");
+  for (const it of state.telegram) L.push((it.off ? "  # " : "  ") + `  - ${q(it.handle)}`);
+  L.push("");
+  L.push("  # X / Twitter \u2014 read through these public mirrors");
+  L.push("  nitter_instances:");
+  for (const u of DATA.social.nitter_instances) L.push(`    - ${u}`);
+  L.push("  twitter:");
+  for (const it of state.twitter) L.push((it.off ? "  # " : "  ") + `  - ${q(it.handle)}`);
+  L.push("");
+  L.push("  # Reddit");
+  L.push("  reddit:");
+  for (const it of state.reddit) L.push((it.off ? "  # " : "  ") + `  - ${q(it.handle)}`);
+  L.push("");
+  L.push("  # Mastodon / fediverse");
+  L.push("  fediverse:");
+  for (const it of state.fediverse){
+    const B = [`    - name: ${q(it.name)}`, `      url: ${q(it.url)}`, `      lang: ${it.lang || "en"}`];
+    L.push(...(it.off ? B.map(l => "# " + l) : B));
+  }
+  L.push("");
+  return L.join("\n") + KEYWORDS_BLOCK;
+}
+
+/* ---------- save sheet ---------- */
+$("save").onclick = () => {
+  const t = tally();
+  $("yaml").textContent = buildYaml();
+  $("sheet-sum").textContent = t.added || t.removed || t.paused
+    ? `${t.added} added, ${t.removed} removed, ${t.paused} paused \u2014 ${t.active} sources will be watched.`
+    : `No changes \u2014 this is your current file, all ${t.active} sources.`;
+  $("sheet").hidden = false;
+  $("copy").focus();
+};
+$("close").onclick = () => { $("sheet").hidden = true; $("save").focus(); };
+$("sheet").onclick = e => { if (e.target === $("sheet")) $("close").click(); };
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !$("sheet").hidden) $("close").click();
+});
+$("copy").onclick = async () => {
+  const btn = $("copy"), text = $("yaml").textContent;
+  try { await navigator.clipboard.writeText(text); }
+  catch (e) {
+    const r = document.createRange();
+    r.selectNodeContents($("yaml"));
+    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    btn.textContent = "Press Ctrl+C to copy";
+    setTimeout(() => btn.textContent = "Copy file", 2600);
+    return;
+  }
+  btn.textContent = "Copied \u2713";
+  setTimeout(() => btn.textContent = "Copy file", 1800);
+};
+$("reset").onclick = () => {
+  if (!confirm("Discard your changes and go back to the sources currently in the repository?")) return;
+  state = seed(); save(); render();
+};
+
+state = load();
+render();
+</script>
