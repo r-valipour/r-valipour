@@ -261,13 +261,15 @@ def main() -> int:
     seen: dict = json.loads(SEEN_FILE.read_text()) if SEEN_FILE.exists() else {}
 
     raw_items: list[dict] = []
-    trusted_ids: set[str] = set()
+    trusted_ids: set[str] = set()  # items exempt from keyword filtering
 
     log("→ main sources")
-    for f in cfg.get("trusted_feeds") or []:
+    for f in cfg.get("main_feeds") or []:
         got = read_feed(f["url"], f["name"], f.get("lang", "en"), "main", cutoff)
-        for it in got:
-            trusted_ids.add(item_id(it["url"], it["title"]))
+        # a main source with `filter: false` bypasses keyword matching
+        if not f.get("filter", True):
+            for it in got:
+                trusted_ids.add(item_id(it["url"], it["title"]))
         raw_items += got
 
     for key, category in (("security_feeds", "security"), ("persian_feeds", "persian")):

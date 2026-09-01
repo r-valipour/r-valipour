@@ -8,24 +8,53 @@ settings:
   # How many days back an article can be and still get picked up.
   lookback_days: 3
   # An item is kept only if it matches BOTH an Iran word and a cyber word
-  # (except for items from `trusted_feeds`, which are kept as-is).
+  # (except for sources marked `filter: false`, which are kept as-is).
   require_both_topics: true
 
 # ───────────────────────────────────────────────────────────────────
-#  BLOCK 1 — MAIN SOURCES (your hand-picked feeds)
-#  Everything here is trusted: kept without keyword filtering.
-#  Format:  - name: Something
-#             url: https://example.com/feed/
-#             lang: en   (or fa)
+#  BLOCK 1 — MAIN SOURCES (your hand-picked outlets)
+#  These appear first, in their own "Main sources" section.
+#
+#  filter: true   → only their Iran-related items are kept  (default)
+#  filter: false  → EVERY item is kept, no filtering
+#
+#  Use filter: false only for narrow, Iran-focused sources. A general
+#  outlet with filter: false will bury the digest in world news.
 # ───────────────────────────────────────────────────────────────────
-trusted_feeds:
-  - name: Iran International - Security
-    url: https://www.iranintl.com/en/feed
+main_feeds:
+  - name: The Hacker News
+    url: https://feeds.feedburner.com/TheHackersNews
     lang: en
-  # ↓↓↓ ADD YOUR OWN MAIN SOURCES HERE ↓↓↓
+    filter: true
+
+  - name: CISA Cybersecurity Advisories
+    url: https://www.cisa.gov/cybersecurity-advisories/all.xml
+    lang: en
+    filter: true
+
+  - name: CyberScoop
+    url: https://cyberscoop.com/feed/
+    lang: en
+    filter: true
+
+  - name: SecurityWeek
+    url: https://www.securityweek.com/feed/
+    lang: en
+    filter: true
+
+  # Reuters blocks automated feed readers, so we reach it through a
+  # Google News site: search instead (see BLOCK 4). If their RSS ever
+  # comes back, this line will start working on its own.
+  - name: Reuters Technology
+    url: https://www.reuters.com/arc/outboundfeeds/rss/?outputType=xml
+    lang: en
+    filter: true
+
+  # ↓↓↓ ADD MORE OF YOUR OWN HERE ↓↓↓
   # - name: My source
   #   url: https://mysource.com/rss
   #   lang: fa
+  #   filter: true
 
 # ───────────────────────────────────────────────────────────────────
 #  BLOCK 2 — GENERAL SECURITY FEEDS (filtered for Iran mentions)
@@ -34,20 +63,11 @@ security_feeds:
   - name: BleepingComputer
     url: https://www.bleepingcomputer.com/feed/
     lang: en
-  - name: The Hacker News
-    url: https://feeds.feedburner.com/TheHackersNews
-    lang: en
   - name: The Record
     url: https://therecord.media/feed
     lang: en
-  - name: SecurityWeek
-    url: https://www.securityweek.com/feed/
-    lang: en
   - name: Krebs on Security
     url: https://krebsonsecurity.com/feed/
-    lang: en
-  - name: CISA Advisories
-    url: https://www.cisa.gov/cybersecurity-advisories/all.xml
     lang: en
   - name: Google Threat Intelligence
     url: https://cloud.google.com/blog/topics/threat-intelligence/rss/
@@ -102,6 +122,7 @@ search_queries:
     - Iran surveillance spyware
     - Charming Kitten OR "APT35" OR "MuddyWater" OR "OilRig"
     - Predatory Sparrow Iran
+    - site:reuters.com Iran cyber
   fa:
     - حمله سایبری ایران
     - هکرهای ایرانی

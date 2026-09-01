@@ -22,7 +22,7 @@ It's plain text, organised into labelled blocks:
 
 | Block | What it is |
 |---|---|
-| `trusted_feeds` | **Your main sources.** Kept without filtering — put your hand-picked feeds here. |
+| `main_feeds` | **Your main sources.** Shown first, in their own section. Each has a `filter:` switch (see below). |
 | `security_feeds` | Big security news sites, filtered for Iran mentions. |
 | `persian_feeds` | Persian-language outlets. |
 | `search_queries` | Web searches, `en` and `fa`. Write anything you'd type into a search box. |
@@ -35,11 +35,21 @@ line above it and change the name and URL. That's the whole skill.
 ### Adding your main sources
 
 ```yaml
-trusted_feeds:
+main_feeds:
   - name: Whatever you want to call it
     url: https://thesite.com/feed/      # the site's RSS feed address
     lang: fa                            # fa for Persian, en for English
+    filter: true                        # see below
 ```
+
+**The `filter` switch matters.** `filter: true` keeps only that source's
+Iran-related items. `filter: false` keeps *everything* it publishes.
+
+Use `filter: false` only for a source that is already narrowly about Iran.
+Setting it on a general outlet like SecurityWeek or Reuters would pour their
+entire global output into your digest — dozens of unrelated items a day. All
+the main sources currently listed are general outlets, so they're all
+`filter: true`.
 
 Most news sites have an RSS feed at `/feed`, `/rss`, or `/feed/`. If a site has none,
 add it as a `search_queries` entry instead (e.g. `site:thesite.com Iran cyber`).
@@ -60,6 +70,9 @@ python3 scripts/collect.py
 - **Too much noise?** In `sources.yml` → `settings`, keep `require_both_topics: true`,
   and trim the broader `keywords` (`internet`, `surveillance`, `apt`).
 - **Missing things?** Add search queries — they're the widest net.
+- **A site with no RSS feed?** Add a search query instead:
+  `site:thatsite.com Iran cyber`. That's how Reuters is covered here, since
+  they block automated feed readers.
 - **Different times?** Edit the `cron` line in
   `.github/workflows/raaznet-calendar.yml`. It's in UTC; Tehran is UTC+3:30.
 - **A source went quiet?** Dead feeds are skipped silently. Check the Actions log —
