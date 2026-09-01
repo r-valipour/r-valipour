@@ -1,0 +1,214 @@
+# ═══════════════════════════════════════════════════════════════════
+#  RaazNet — Iran cybersecurity news calendar
+#  THIS IS THE ONLY FILE YOU NEED TO EDIT.
+#  Add a line, delete a line, put a # in front to switch something off.
+# ═══════════════════════════════════════════════════════════════════
+
+settings:
+  # How many days back an article can be and still get picked up.
+  lookback_days: 3
+  # An item is kept only if it matches BOTH an Iran word and a cyber word
+  # (except for items from `trusted_feeds`, which are kept as-is).
+  require_both_topics: true
+
+# ───────────────────────────────────────────────────────────────────
+#  BLOCK 1 — MAIN SOURCES (your hand-picked feeds)
+#  Everything here is trusted: kept without keyword filtering.
+#  Format:  - name: Something
+#             url: https://example.com/feed/
+#             lang: en   (or fa)
+# ───────────────────────────────────────────────────────────────────
+trusted_feeds:
+  - name: Iran International - Security
+    url: https://www.iranintl.com/en/feed
+    lang: en
+  # ↓↓↓ ADD YOUR OWN MAIN SOURCES HERE ↓↓↓
+  # - name: My source
+  #   url: https://mysource.com/rss
+  #   lang: fa
+
+# ───────────────────────────────────────────────────────────────────
+#  BLOCK 2 — GENERAL SECURITY FEEDS (filtered for Iran mentions)
+# ───────────────────────────────────────────────────────────────────
+security_feeds:
+  - name: BleepingComputer
+    url: https://www.bleepingcomputer.com/feed/
+    lang: en
+  - name: The Hacker News
+    url: https://feeds.feedburner.com/TheHackersNews
+    lang: en
+  - name: The Record
+    url: https://therecord.media/feed
+    lang: en
+  - name: SecurityWeek
+    url: https://www.securityweek.com/feed/
+    lang: en
+  - name: Krebs on Security
+    url: https://krebsonsecurity.com/feed/
+    lang: en
+  - name: CISA Advisories
+    url: https://www.cisa.gov/cybersecurity-advisories/all.xml
+    lang: en
+  - name: Google Threat Intelligence
+    url: https://cloud.google.com/blog/topics/threat-intelligence/rss/
+    lang: en
+  - name: Microsoft Threat Intelligence
+    url: https://www.microsoft.com/en-us/security/blog/topic/threat-intelligence/feed/
+    lang: en
+  - name: Recorded Future
+    url: https://www.recordedfuture.com/feed
+    lang: en
+  - name: ESET WeLiveSecurity
+    url: https://feeds.feedburner.com/eset/blog
+    lang: en
+
+# ───────────────────────────────────────────────────────────────────
+#  BLOCK 3 — PERSIAN-LANGUAGE FEEDS  /  فیدهای فارسی
+# ───────────────────────────────────────────────────────────────────
+persian_feeds:
+  - name: زومیت
+    url: https://www.zoomit.ir/feed/
+    lang: fa
+  - name: ایسنا - علم و فناوری
+    url: https://www.isna.ir/rss/tp/41
+    lang: fa
+  - name: مهر - فناوری
+    url: https://www.mehrnews.com/rss/tp/22
+    lang: fa
+  - name: BBC فارسی
+    url: https://feeds.bbci.co.uk/persian/rss.xml
+    lang: fa
+  - name: رادیو فردا
+    url: https://www.radiofarda.com/api/zrqiteuuir
+    lang: fa
+  - name: ایران اینترنشنال
+    url: https://www.iranintl.com/fa/feed
+    lang: fa
+
+# ───────────────────────────────────────────────────────────────────
+#  BLOCK 4 — WEB SEARCH ("surf the web for hints")
+#  These become Google News searches, run fresh every day.
+#  Write any query you'd type into a search box.
+# ───────────────────────────────────────────────────────────────────
+search_queries:
+  en:
+    - Iran cyberattack
+    - Iranian hackers
+    - Iran APT threat actor
+    - Iran critical infrastructure hack
+    - Iran internet censorship filtering
+    - Iranian state-sponsored hacking
+    - Iran data breach leak
+    - Iran surveillance spyware
+    - Charming Kitten OR "APT35" OR "MuddyWater" OR "OilRig"
+    - Predatory Sparrow Iran
+  fa:
+    - حمله سایبری ایران
+    - هکرهای ایرانی
+    - نشت اطلاعات ایران
+    - امنیت سایبری ایران
+    - فیلترینگ اینترنت ایران
+    - باج‌افزار ایران
+    - جاسوس‌افزار ایران
+    - زیرساخت حیاتی سایبری
+
+# ═══════════════════════════════════════════════════════════════════
+#  BLOCK 5 — SOCIAL MEDIA  (separate block, as requested)
+#  Comment out anything you don't want. Nitter can be flaky; the
+#  script just skips it silently and keeps going.
+# ═══════════════════════════════════════════════════════════════════
+social:
+
+  # ---- Telegram public channels (most reliable for Iran infosec) ----
+  # Just the channel name after t.me/ — no @ needed.
+  telegram:
+    - filterwatch
+    - net4iran
+    # - your_channel_here
+
+  # ---- X / Twitter accounts (via public Nitter mirrors) ----
+  nitter_instances:
+    - https://nitter.net
+    - https://nitter.poast.org
+  twitter:
+    - amitaii
+    - CyberAmir
+    - 1ZRR4H
+    - campuscodi
+    # - your_account_here
+
+  # ---- Reddit ----
+  reddit:
+    - cybersecurity
+    - netsec
+    - blueteamsec
+
+  # ---- Mastodon / Bluesky (public RSS) ----
+  fediverse:
+    - name: Mastodon - #Iran
+      url: https://infosec.exchange/tags/iran.rss
+      lang: en
+    - name: Mastodon - #IranCyber
+      url: https://infosec.exchange/tags/irancyber.rss
+      lang: en
+
+# ═══════════════════════════════════════════════════════════════════
+#  BLOCK 6 — KEYWORDS (how "is this relevant?" is decided)
+# ═══════════════════════════════════════════════════════════════════
+keywords:
+  iran:
+    - iran
+    - iranian
+    - tehran
+    - irgc
+    - "islamic republic"
+    - persian gulf
+    - charming kitten
+    - apt33
+    - apt34
+    - apt35
+    - apt39
+    - apt42
+    - muddywater
+    - oilrig
+    - cobalt mirage
+    - homeland justice
+    - predatory sparrow
+    - gonjeshke darande
+    - ایران
+    - ایرانی
+    - تهران
+    - سپاه
+  cyber:
+    - cyber
+    - hack
+    - hacker
+    - hacking
+    - breach
+    - malware
+    - ransomware
+    - phishing
+    - spyware
+    - apt
+    - threat actor
+    - vulnerability
+    - exploit
+    - zero-day
+    - ddos
+    - data leak
+    - infostealer
+    - surveillance
+    - censorship
+    - internet shutdown
+    - سایبری
+    - هکر
+    - هک
+    - بدافزار
+    - باج‌افزار
+    - فیشینگ
+    - جاسوس‌افزار
+    - نشت اطلاعات
+    - آسیب‌پذیری
+    - رخنه
+    - فیلترینگ
+    - اینترنت
