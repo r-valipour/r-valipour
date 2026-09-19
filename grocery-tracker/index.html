@@ -86,7 +86,7 @@ h1{font-size:2rem;font-weight:700;letter-spacing:.01em}
   <header class="hdr">
     <div>
       <h1>🧺 Grocery Jar</h1>
-      <p>$73 a week. That's the whole jar.</p>
+      <p>$73 a week: $68 planned + a $5 buffer.</p>
     </div>
     <nav class="weeknav" aria-label="Choose week">
       <button id="prevWeek" type="button" aria-label="Previous week">‹</button>
@@ -106,6 +106,7 @@ h1{font-size:2rem;font-weight:700;letter-spacing:.01em}
   </section>
 
   <section class="cats" id="cats"></section>
+  <p class="tip" id="bufferText"></p>
 
   <section class="hist">
     <h2>🌸 Past weeks</h2>
@@ -127,7 +128,9 @@ const CATS = [
   {id:'basics',  name:'Basics',        ico:'🧂', budget:3},
   {id:'lazy',    name:'Lazy-day food', ico:'🍜', budget:3},
 ];
-const CAP = CATS.reduce((s,c)=>s+c.budget,0); // 73
+const CAP = 73; // weekly jar
+const PLANNED = CATS.reduce((s,c)=>s+c.budget,0); // 68
+const BUFFER = CAP - PLANNED; // 5 unassigned
 const KEY = 'grocery-jar-v1';
 
 let store = {};
@@ -167,6 +170,9 @@ function render(){
   const left = CAP-total;
   document.getElementById('leftText').textContent = left>=0 ? money(left)+' left in the jar' : money(-left)+' over — gentle reset next week';
   document.getElementById('leftText').className = left<0?'over':'';
+  const overs = CATS.reduce((a,c)=>a+Math.max(0,sum(items(k,c.id))-c.budget),0);
+  const bufLeft = BUFFER-overs;
+  document.getElementById('bufferText').textContent = overs===0 ? '🧸 $'+BUFFER+' buffer untouched. It covers small overspends in any category.' : bufLeft>=0 ? '🧸 Buffer: '+money(bufLeft)+' of $'+BUFFER+' left after covering overspends.' : '🧸 Buffer used up, and '+money(-bufLeft)+' past it.';
   const n = CATS.reduce((a,c)=>a+items(k,c.id).length,0);
   document.getElementById('countText').textContent = n===0 ? 'Nothing logged yet' : n+' item'+(n>1?'s':'')+' logged — find them as pills below';
   document.getElementById('clearWeek').hidden = n===0;
