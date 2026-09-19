@@ -19,4 +19,4 @@ Here are some ideas to get you started:
 
 ## 🧺 Grocery Jar
 
-A tiny weekly grocery budget tracker ($73/week across 7 categories). Open `grocery-tracker/index.html` in any browser — entries are saved on your device.
+A tiny weekly grocery budget tracker ($73/week across 7 categories). For offline use, download `grocery-tracker/grocery-jar.html` and open it in any browser — entries are saved on your device. (`index.html` is the fragment published as a Claude artifact.)
