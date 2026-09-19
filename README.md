@@ -16,3 +16,7 @@ Here are some ideas to get you started:
 - 😄 Pronouns: ...
 - ⚡ Fun fact: ...
 -->
+
+## 🧺 Grocery Jar
+
+A tiny weekly grocery budget tracker ($73/week across 7 categories). Open `grocery-tracker/index.html` in any browser — entries are saved on your device.
