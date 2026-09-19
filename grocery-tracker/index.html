@@ -76,6 +76,8 @@ h1{font-size:2rem;font-weight:700;letter-spacing:.01em}
 .hist li{display:grid;grid-template-columns:1fr auto 26px;align-items:center;gap:10px;font-weight:700;font-variant-numeric:tabular-nums}
 .hist li span:first-child{color:var(--muted);font-size:.9rem}
 .hist .empty{color:var(--muted);font-weight:700;margin:0}
+.link{border:0;background:none;color:var(--accent-ink);font:inherit;font-weight:800;cursor:pointer;padding:0;text-decoration:underline}
+.link:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .tip{color:var(--muted);font-size:.85rem;text-align:center;font-weight:700;margin:0}
 @media (prefers-reduced-motion: reduce){.bar i{transition:none}}
 </style>
@@ -100,6 +102,7 @@ h1{font-size:2rem;font-weight:700;letter-spacing:.01em}
     </div>
     <div class="bar" id="totalBar"><i style="width:0%"></i></div>
     <div class="legend"><span id="leftText"></span><span id="dayText"></span></div>
+    <div class="legend"><span id="countText"></span><button class="link" id="clearWeek" type="button">Clear this week</button></div>
   </section>
 
   <section class="cats" id="cats"></section>
@@ -164,6 +167,9 @@ function render(){
   const left = CAP-total;
   document.getElementById('leftText').textContent = left>=0 ? money(left)+' left in the jar' : money(-left)+' over — gentle reset next week';
   document.getElementById('leftText').className = left<0?'over':'';
+  const n = CATS.reduce((a,c)=>a+items(k,c.id).length,0);
+  document.getElementById('countText').textContent = n===0 ? 'Nothing logged yet' : n+' item'+(n>1?'s':'')+' logged — find them as pills below';
+  document.getElementById('clearWeek').hidden = n===0;
   const mood = total===0 ? (isNext?'Planning ahead 🗓️':'Fresh jar ✨') : left<0 ? 'Oops, over 🫠' : left<CAP*0.15 ? 'Almost full 👀' : 'Doing great 💖';
   document.getElementById('mood').textContent = mood;
   if(isThis){
@@ -227,6 +233,7 @@ function renderHistory(){
   }
 }
 
+document.getElementById('clearWeek').onclick=()=>{ if(confirm('Remove everything logged for this week?')){ store[keyOf(viewMonday)]={}; save(); render(); } };
 document.getElementById('prevWeek').onclick=()=>{ viewMonday.setDate(viewMonday.getDate()-7); render(); };
 document.getElementById('nextWeek').onclick=()=>{ if(viewMonday<nextMonday){ viewMonday.setDate(viewMonday.getDate()+7); render(); } };
 render();
