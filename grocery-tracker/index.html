@@ -111,7 +111,7 @@ h1{font-size:2rem;font-weight:700;letter-spacing:.01em}
     <p class="empty" id="histEmpty">Your first week is underway. Finish it under $73 to start a streak.</p>
   </section>
 
-  <p class="tip">Saved on this device only. Tap a little pill to remove it.</p>
+  <p class="tip">Saved on this device only. Tap a little pill to remove it. Use › to log shopping for next week.</p>
 </div>
 
 <script>
@@ -140,6 +140,7 @@ const money = n => '$'+(Math.round(n*100)/100).toLocaleString(undefined,{minimum
 
 const thisMonday = mondayOf(new Date());
 let viewMonday = new Date(thisMonday);
+const nextMonday = new Date(thisMonday); nextMonday.setDate(nextMonday.getDate()+7);
 
 function week(k){ if(!store[k]) store[k]={}; return store[k]; }
 function items(k,cid){ const w=week(k); if(!w[cid]) w[cid]=[]; return w[cid]; }
@@ -151,9 +152,9 @@ function barClass(spent,budget){ const r=spent/budget; return r>1?'bad':r>=0.85?
 function render(){
   const k = keyOf(viewMonday);
   const sunday = new Date(viewMonday); sunday.setDate(sunday.getDate()+6);
-  const isThis = k===keyOf(thisMonday);
-  document.getElementById('weekLabel').textContent = (isThis?'This week · ':'')+fmtDay(viewMonday)+' – '+fmtDay(sunday);
-  document.getElementById('nextWeek').disabled = isThis;
+  const isThis = k===keyOf(thisMonday), isNext = k===keyOf(nextMonday);
+  document.getElementById('weekLabel').textContent = (isThis?'This week · ':isNext?'Next week · ':'')+fmtDay(viewMonday)+' – '+fmtDay(sunday);
+  document.getElementById('nextWeek').disabled = isNext;
 
   const total = weekTotal(k);
   document.getElementById('spent').textContent = money(total);
@@ -163,13 +164,13 @@ function render(){
   const left = CAP-total;
   document.getElementById('leftText').textContent = left>=0 ? money(left)+' left in the jar' : money(-left)+' over — gentle reset next week';
   document.getElementById('leftText').className = left<0?'over':'';
-  const mood = total===0 ? 'Fresh jar ✨' : left<0 ? 'Oops, over 🫠' : left<CAP*0.15 ? 'Almost full 👀' : 'Doing great 💖';
+  const mood = total===0 ? (isNext?'Planning ahead 🗓️':'Fresh jar ✨') : left<0 ? 'Oops, over 🫠' : left<CAP*0.15 ? 'Almost full 👀' : 'Doing great 💖';
   document.getElementById('mood').textContent = mood;
   if(isThis){
     const today=new Date(); today.setHours(0,0,0,0);
     const dayN = Math.round((today-thisMonday)/86400000)+1;
     document.getElementById('dayText').textContent = 'Day '+dayN+' of 7';
-  } else document.getElementById('dayText').textContent = 'Past week';
+  } else document.getElementById('dayText').textContent = isNext ? 'Shopping ahead 🛒' : 'Past week';
 
   const cats = document.getElementById('cats'); cats.innerHTML='';
   for(const c of CATS){
@@ -227,6 +228,6 @@ function renderHistory(){
 }
 
 document.getElementById('prevWeek').onclick=()=>{ viewMonday.setDate(viewMonday.getDate()-7); render(); };
-document.getElementById('nextWeek').onclick=()=>{ if(viewMonday<thisMonday){ viewMonday.setDate(viewMonday.getDate()+7); render(); } };
+document.getElementById('nextWeek').onclick=()=>{ if(viewMonday<nextMonday){ viewMonday.setDate(viewMonday.getDate()+7); render(); } };
 render();
 </script>
